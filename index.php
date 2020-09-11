@@ -14,22 +14,21 @@ $items  = array();
 foreach($rows as $row) $items[] = @array_combine($header, $row);
 
 // get keywords & collaborators from entries
-$topics = array();
-$people = array();
+$left_items = array();
+$right_items = array();
+
 foreach ($items as $i => $item) {
-	if ($items[$i]["topics"]!="") {
-		$items[$i]["topics"] = explode(";", $items[$i]["topics"]);
-		$topics = array_unique (array_merge ($topics, $items[$i]["topics"]));	
+	if ($items[$i][$facet_left]!="") {
+		$items[$i][$facet_left] = explode(";", $items[$i][$facet_left]);
+		$left_items = array_unique (array_merge ($left_items, $items[$i][$facet_left]));	
 	}
-	if ($items[$i]["people"]!="") {
-		$items[$i]["people"] = explode(";", $items[$i]["people"]);
-		$people = array_unique (array_merge ($people, $items[$i]["people"]));	
+	if ($items[$i][$facet_right]!="") {
+		$items[$i][$facet_right] = explode(";", $items[$i][$facet_right]);
+		$right_items = array_unique (array_merge ($right_items, $items[$i][$facet_right]));	
 	}
 }
-asort($topics);
-asort($people);
-
-error_log(print_r($items, true));
+asort($left_items);
+asort($right_items);
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -71,7 +70,6 @@ error_log(print_r($items, true));
     font-weight: 100;
 }
 
-
 * {
   transition-duration: .5s;
   transition-property: background-color;	
@@ -107,8 +105,8 @@ a:link, a:visited { color: var(--light_link); }
 ::selection {   background-color: var(--light_link); }	
 #m li img:not(.dark) { opacity: 1; }	
 div#switch { background-image: var(--moon); }
-#m li.project img {border-color: var(--light_border);}
-#m li.project:hover img {border-color: var(--light_border_hover);}
+#m li img {border-color: var(--light_border);}
+#m li:hover img {border-color: var(--light_border_hover);}
 
 body.toggle { color: var(--dark_text); background-color: var(--dark_background); }
 body.toggle h2 { color: var(--dark_text); }
@@ -117,11 +115,11 @@ body.toggle #l .active span, body.toggle #r .active span, body.toggle #m .active
 body.toggle #m li { color: var(--dark_text); }
 body.toggle #m h2 a { color: var(--dark_text);}
 body.toggle ::selection { background-color: var(--dark_link); }		
-body.toggle #m li img:not(.dark) { opacity: .66; transition: opacity .5s; }	
+body.toggle #m li img:not(.dark) { opacity: .66; transition: opacity .5s; }
 body.toggle #m li:hover img:not(.dark) { opacity: 1; }
 body.toggle div#switch { background-image: var(--sun) }						
-body.toggle #m li.project img {border-color: var(--dark_border);}
-body.toggle #m li.project:hover img {border-color: var(--dark_border_hover);}
+body.toggle #m li img {border-color: var(--dark_border);}
+body.toggle #m li:hover img {border-color: var(--dark_border_hover);}
 
 
 /* dark mode */
@@ -136,8 +134,8 @@ body.toggle #m li.project:hover img {border-color: var(--dark_border_hover);}
 	#m li img:not(.dark) { opacity: .66; transition: opacity .5s; }
 	#m li:hover img:not(.dark) { opacity: 1; }	
 	div#switch { background-image: var(--sun); }	
-	#m li.project img {border-color: var(--dark_border);}	
-	#m li.project:hover img {border-color: var(--dark_border_hover);}
+	#m li img {border-color: var(--dark_border);}	
+	#m li:hover img {border-color: var(--dark_border_hover);}
 		
 	body.toggle { color: var(--light_text); background-color: var(--light_background); }
 	body.toggle h2 { color: var(--light_text); }
@@ -148,8 +146,8 @@ body.toggle #m li.project:hover img {border-color: var(--dark_border_hover);}
 	body.toggle ::selection { background-color: var(--light_link); }		
 	body.toggle #m li img:not(.dark) { opacity: 1; }	
 	body.toggle div#switch { background-image: var(--moon); }	
-	body.toggle #m li.project img {border-color: var(--light_border); }	
-	body.toggle #m li.project:hover img {border-color: var(--light_border_hover);}	
+	body.toggle #m li img {border-color: var(--light_border); }	
+	body.toggle #m li:hover img {border-color: var(--light_border_hover);}	
 }
 
 
@@ -259,10 +257,10 @@ li { 	margin: 0; padding: 0; }
 #l li {padding: 0; margin: .2em 0; line-height: 1.2em; font-weight: 100; }
 #l p {transform: translate3d(0,0,0); }
 
-/* papers & projects */
+/* types */
 #m img { width: 44.4vw; height: 11.1vw; margin-bottom: 0em; }
 
-#m li.project img {
+#m li img {
 	border-width: .08em;
 	border-style: solid;
 }
@@ -346,10 +344,10 @@ li { 	margin: 0; padding: 0; }
 <?php echo $contact_details ?>
 </p>
 
-<h2>Keywords</h2>
+<h2><?php echo $facet_left ?></h2>
 <ul>
 <?php
-foreach ($topics as $topic) {
+foreach ($left_items as $topic) {
 	$slug = preg_replace("/[^A-Za-z0-9]/", '', $topic);
 	echo "<li id='$slug'><span>".htmlspecialchars($topic)."</span></li>\n";
 }
@@ -359,10 +357,10 @@ foreach ($topics as $topic) {
 </div>
 
 <div id="r">
-<h2>Collab&shy;orators</h2>
+<h2><?php echo $facet_right ?></h2>
 <ul>
 <?php
-foreach ($people as $name) {
+foreach ($right_items as $name) {
 	$slug = preg_replace("/[^A-Za-z0-9]/", '', $name);
 	echo "<li id='$slug'><span>$name</span></li>\n";
 }
@@ -371,21 +369,26 @@ foreach ($people as $name) {
 </div>
 
 <div id="m" class="init">
-<h2><a href="#papers">Publications</a> &amp; <a href="#projects">Projects</a></h2>
+<h2><?php
+	
+	foreach ($types as $i=>$t) {
+		if (count($types)==$i+1) echo " &amp; ";
+		echo "<a href='#$t'>$t</a> ";
+	}
+?></h2>
 <ul>
 
 <?php
 
 foreach ($items as $item) {
 	
-	$class_slug = "";
-	if ($item["type"]=="project") $class_slug = "project";
+	$class_slug = $item["type"];
 	
-	if (is_array($item["topics"])) foreach ($item["topics"] as $topic) {
+	if (is_array($item[$facet_left])) foreach ($item[$facet_left] as $topic) {
 		$class_slug = $class_slug." ".preg_replace("/[^A-Za-z0-9]/", '', $topic);
 	}
 	
-	if (is_array($item["people"])) foreach ($item["people"] as $name) {
+	if (is_array($item[$facet_right])) foreach ($item[$facet_right] as $name) {
 		$class_slug = $class_slug." ".preg_replace("/[^A-Za-z0-9]/", '', $name);
 	}
 	
@@ -394,7 +397,7 @@ foreach ($items as $item) {
 	if ($item["hover"]!="") echo " title='{$item["hover"]}' ";
 	echo	">";
 		
-	if ($item["type"]=="project") echo "<img alt='{$item["title"]}' src='{$app_path}banners/{$item["img"]}'>";
+	if ($item["img"]!="") echo "<img alt='{$item["title"]}' src='{$app_path}banners/{$item["img"]}'>";
 
 	echo "{$item["title"]}</a> {$item["info"]}</li>\n";
 }
@@ -422,7 +425,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
 
 var website_title = "<?php echo $website_title ?>";
-var view = 0; // 1: keywords, 2: projects vs papers, 3: people
+var view = 0; // 1: keywords, 2: types, 3: people
 var vin = -1; // index of keyword or person
 var hash = '';
 var l = []; var m = []; var r = [];
@@ -444,7 +447,7 @@ function X(s) { return document.querySelectorAll(s); }
 var strokeColor = '50,50,50';
 var darkmodeToggle = -1;	
 var gap = 200;
-
+var types = ['<?php echo implode("','", $types) ?>'];
 
 
 
@@ -461,11 +464,10 @@ function items() {
 		if (view==1) {
 			for (var i = 0; i < lm[vin].length; i++) lm[vin][i].classList.remove("hidden");
 		}
-		// projects or papers
+		// types
 		else if (view==2) {
-			X("#m li").forEach(function(e){	
-				if (e.classList.contains("project") && vin==1) e.classList.remove("hidden");			
-				else if (!e.classList.contains("project") && vin==0 ) e.classList.remove("hidden");
+			X("#m li").forEach(function(e){
+				if (e.classList.contains(types[vin])) e.classList.remove("hidden");
 			})
 		}
 		// people
@@ -529,8 +531,7 @@ function link_lm(a, b, o) {
 	var bb1 = x("#l li:nth-of-type("+(a+1)+") span").getBoundingClientRect();
 	var bb2 = m_bb[b];
 	
-	if (x("#m li:nth-of-type("+(b+1)+")").classList.contains("project")) var h = 5.5*vw;
-	else var h = bb2.height/2;
+	var h = bb2.height/2;
 	
 	var dx = -can_bb.left;
 	var dy = -can_bb.top;				
@@ -551,9 +552,8 @@ function link_lm(a, b, o) {
 function link_mr(a, b, o) {
 	var bb1 = m_bb[a];
 	var bb2 = x("#r li:nth-of-type("+(b+1)+") span").getBoundingClientRect();
-	
-	if (x("#m li:nth-of-type("+(a+1)+")").classList.contains("project")) var h = 5.5*vw;
-	else var h = bb1.height/2;
+
+	var h = bb1.height/2;
 	
 	var dx = -can_bb.left;
 	var dy = -can_bb.top;	
@@ -664,38 +664,31 @@ function check_view() {
 	X(".active").forEach(function(e) {e.classList.remove("active")});
 	X(".passive").forEach(function(e) {e.classList.remove("passive")});
 	
-	if (hash=="papers")
-	{
-		view = 2;	
-		vin = 0;
-		
-		var pub = x("#m h2 a:nth-of-type(1)");
-		pub.classList.add("active");
-		pub.setAttribute("href", "#");
-		
-		var pro = x("#m h2 a:nth-of-type(2)");
-		pro.classList.remove("active");
-		pro.setAttribute("href", "#projects");
-		
-		document.title = website_title+" · Publications";	
-	}
-	else if (hash=="projects") {
-		view = 2;	
-		vin = 1;
-		
-		var pub = x("#m h2 a:nth-of-type(1)");
-		pub.classList.remove("active");
-		pub.setAttribute("href", "#papers");
-		
-		var pro = x("#m h2 a:nth-of-type(2)");
-		pro.classList.add("active");
-		pro.setAttribute("href", "#");
+	vin = types.indexOf(hash);
 
-		document.title = website_title+" · Projects";
-	}	
+	if (vin>-1) {
+		view = 2;	
+		
+		for (var i = 0; i < types.length; i++) {
+			
+			var t = x("#m h2 a:nth-of-type("+(i+1)+")");
+			
+			if (vin==i) {
+				t.classList.add("active");
+				t.setAttribute("href", "#");
+			}
+			else {
+				t.classList.remove("active");
+				t.setAttribute("href", "#"+types[i]);				
+			}
+		}
+
+		document.title = website_title+" · "+types[vin];			
+	}
 	else {
-		x("#m h2 a:nth-of-type(1)").setAttribute("href", "#papers")
-		x("#m h2 a:nth-of-type(2)").setAttribute("href", "#projects");
+		for (var i = 0; i < types.length; i++) {
+			x("#m h2 a:nth-of-type("+(i+1)+")").setAttribute("href", "#"+types[i])
+		}
 		
 		X("#l li").forEach(function(e){
 			var id = e.id;

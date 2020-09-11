@@ -12,4 +12,11 @@ $contact_details ='Kiepenheuerallee&nbsp;5, 14469&nbsp;Potsdam<br>
 <a href="tel:00493315802511">+49 331 580-2511</a><br>
 <a href="https://twitter.com/nrchtct">@nrchtct</a>';
 
+// should match column names in data.csv
+$facet_left = "keywords";
+$facet_right = "collaborators";
+
+// should be used in type column
+$types = array("Publications", "Projects");
+
 ?>
