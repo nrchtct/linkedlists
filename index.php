@@ -1,0 +1,962 @@
+<?php
+
+$app_path = "linkedlists/";
+include $app_path.'config.php';
+
+$app_url = $website_url.$app_path;
+
+$data = $app_path."data.csv";
+
+// load data
+$rows   = array_map('str_getcsv', file($data));
+$header = array_shift($rows);
+$items  = array();
+foreach($rows as $row) $items[] = @array_combine($header, $row);
+
+// get keywords & collaborators from entries
+$topics = array();
+$people = array();
+foreach ($items as $i => $item) {
+	if ($items[$i]["topics"]!="") {
+		$items[$i]["topics"] = explode(";", $items[$i]["topics"]);
+		$topics = array_unique (array_merge ($topics, $items[$i]["topics"]));	
+	}
+	if ($items[$i]["people"]!="") {
+		$items[$i]["people"] = explode(";", $items[$i]["people"]);
+		$people = array_unique (array_merge ($people, $items[$i]["people"]));	
+	}
+}
+asort($topics);
+asort($people);
+
+error_log(print_r($items, true));
+
+?><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title><?php echo $website_title ?></title>
+
+<meta name="title" content="<?php echo $website_title ?>">
+<meta name="description" content="<?php echo $website_description ?>">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="<?php echo $website_baseurl ?>/">
+<meta property="og:title" content="<?php echo $website_title ?>">
+<meta property="og:description" content="<?php echo $website_description ?>">
+<meta property="og:image" content="<?php echo $app_path ?>img/boxes.png">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" type="image/png" href="<?php echo $app_path ?>img/favicon.png">
+<link rel="icon" type="image/png" href="<?php echo $app_path ?>favicon-192.png" sizes="192x192">
+
+<style>
+
+@font-face {
+    font-family: hkgrotesk;
+    src: url("<?php echo $app_path ?>fonts/hkgrotesk-bold.woff") format("woff");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: hkgrotesk;
+    src: url("<?php echo $app_path ?>fonts/hkgrotesk-regular.woff") format("woff");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: hkgrotesk;
+    src: url("<?php echo $app_path ?>fonts/hkgrotesk-light.woff") format("woff");
+    font-weight: 100;
+}
+
+
+* {
+  transition-duration: .5s;
+  transition-property: background-color;	
+}
+
+/* default colors */
+:root {
+  --light_background: hsl(0,0%,98%);
+  --light_text: hsl(0,0%,0%);
+	--light_border: hsl(0,0%,75%);
+	--light_border_hover: hsl(0,0%,50%);
+	--light_link: hsl(209,100%,45%);
+	--light_filter: hsl(330,100%,40%);
+	--dark_background: hsl(0,0%,8%);
+	--dark_text: hsl(0,0%,75%);
+	--dark_border: hsl(0,0%,25%);
+	--dark_border_hover: hsl(0,0%,50%);
+	--dark_link: hsl(209,100%,40%);
+	--dark_filter: hsl(330,100%,40%);
+	--sun:url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8' standalone='no'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg xmlns:xl='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' xmlns:dc='http://purl.org/dc/elements/1.1/' version='1.1' viewBox='0 0 100 100' width='100' height='100'%3E%3Cdefs/%3E%3Cg id='sun' stroke='none' stroke-opacity='1' stroke-dasharray='none' fill-opacity='1' fill='none'%3E%3Ctitle%3Esun%3C/title%3E%3Cg id='sun: Layer 1'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cg id='Graphic_6'%3E%3Ccircle cx='49.6063' cy='49.6063' r='15.5905760024116' fill='white'/%3E%3C/g%3E%3Cg id='Line_7'%3E%3Cline x1='49.6063' y1='8.838385' x2='49.6063' y2='28.680905' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3Cg id='Line_8'%3E%3Cline x1='49.6063' y1='70.7445' x2='49.6063' y2='90.58702' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3Cg id='Line_12'%3E%3Cline x1='90.54144' y1='49.6063' x2='70.69892' y2='49.6063' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3Cg id='Line_11'%3E%3Cline x1='28.504923' y1='49.6063' x2='8.662403' y2='49.6063' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3Cg id='Line_16'%3E%3Cline x1='78.635545' y1='20.577053' x2='64.604765' y2='34.607833' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3Cg id='Line_15'%3E%3Cline x1='34.634665' y1='64.57793' x2='20.603885' y2='78.60871' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3Cg id='Line_20'%3E%3Cline x1='20.586964' y1='20.46408' x2='34.617744' y2='34.49486' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3Cg id='Line_19'%3E%3Cline x1='64.58784' y1='64.46496' x2='78.61862' y2='78.49574' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A");
+	--moon: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8' standalone='no'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg xmlns:xl='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' xmlns:dc='http://purl.org/dc/elements/1.1/' version='1.1' viewBox='0 0 100 100' width='100' height='100'%3E%3Cdefs/%3E%3Cg id='moon' stroke='none' stroke-opacity='1' stroke-dasharray='none' fill-opacity='1' fill='none'%3E%3Ctitle%3Emoon%3C/title%3E%3Cg id='moon: Layer 1'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cg id='Graphic_4'%3E%3Cpath d='M 14.173229 67.11095 C 15.648538 69.51313 17.426565 71.781945 19.50731 73.86268 C 33.80932 88.16476 56.99744 88.16476 71.299445 73.86268 C 85.60153 59.56067 85.60153 36.372554 71.299445 22.070546 C 67.82103 18.59211 63.81698 15.95967 59.542976 14.173228 C 68.20826 28.282496 66.43023 46.992363 54.208894 59.213636 C 43.385304 70.03728 27.472387 72.66972 14.173228 67.11095 Z' fill='black'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A");
+
+}
+
+
+/* light and default */
+body { color: var(--light_text); background-color: var(--light_background);} 
+h2 { color: var(--light_text); }
+a:link, a:visited { color: var(--light_link); }
+#l .active span, #r .active span , #m .active { color: var(--light_filter); }
+#m li { color: var(--light_text);}
+#m h2 a { color: var(--light_text);}
+::selection {   background-color: var(--light_link); }	
+#m li img:not(.dark) { opacity: 1; }	
+div#switch { background-image: var(--moon); }
+#m li.project img {border-color: var(--light_border);}
+#m li.project:hover img {border-color: var(--light_border_hover);}
+
+body.toggle { color: var(--dark_text); background-color: var(--dark_background); }
+body.toggle h2 { color: var(--dark_text); }
+body.toggle a:link, body.toggle a:visited { color: var(--dark_link); }
+body.toggle #l .active span, body.toggle #r .active span, body.toggle #m .active { color: var(--dark_filter); }
+body.toggle #m li { color: var(--dark_text); }
+body.toggle #m h2 a { color: var(--dark_text);}
+body.toggle ::selection { background-color: var(--dark_link); }		
+body.toggle #m li img:not(.dark) { opacity: .66; transition: opacity .5s; }	
+body.toggle #m li:hover img:not(.dark) { opacity: 1; }
+body.toggle div#switch { background-image: var(--sun) }						
+body.toggle #m li.project img {border-color: var(--dark_border);}
+body.toggle #m li.project:hover img {border-color: var(--dark_border_hover);}
+
+
+/* dark mode */
+@media (prefers-color-scheme: dark) {
+	body { color: var(--dark_text); background-color: var(--dark_background);} 
+	h2 { color: var(--dark_text); }
+	a:link, a:visited { color: var(--dark_link); }
+	#l .active span, #r .active span , #m .active { color: var(--dark_filter); }
+	#m li { color: var(--dark_text); }
+	#m h2 a { color: var(--dark_text);}
+	::selection { background-color: var(--dark_link); }
+	#m li img:not(.dark) { opacity: .66; transition: opacity .5s; }
+	#m li:hover img:not(.dark) { opacity: 1; }	
+	div#switch { background-image: var(--sun); }	
+	#m li.project img {border-color: var(--dark_border);}	
+	#m li.project:hover img {border-color: var(--dark_border_hover);}
+		
+	body.toggle { color: var(--light_text); background-color: var(--light_background); }
+	body.toggle h2 { color: var(--light_text); }
+	body.toggle a:link, body.toggle a:visited { color: var(--light_link); }
+	body.toggle #l .active span, body.toggle #r .active span , body.toggle #m .active { color: var(--light_filter); }
+	body.toggle #m li { color: var(--light_text); }
+	body.toggle #m h2 a { color: var(--light_text);}
+	body.toggle ::selection { background-color: var(--light_link); }		
+	body.toggle #m li img:not(.dark) { opacity: 1; }	
+	body.toggle div#switch { background-image: var(--moon); }	
+	body.toggle #m li.project img {border-color: var(--light_border); }	
+	body.toggle #m li.project:hover img {border-color: var(--light_border_hover);}	
+}
+
+
+canvas, #l, #m, #r {
+	opacity: 1; 
+  transition-duration: .2s;
+  transition-property: opacity;	
+}
+
+
+body {
+	-webkit-text-size-adjust: none;
+	margin: 0; padding: 0;
+	font-family: hkgrotesk, sans-serif;
+/*	font-size: 1.25vw;*/
+	font-size: 10px;
+	font-weight: 100;
+	line-height: 1.3em;
+	margin: auto;
+	overflow-y: scroll;
+	min-height: 100vh;	
+}
+
+::selection {
+	color: white;
+}
+
+h1 {
+	font-size: 2em;	
+	font-weight: 100;
+	line-height: 1.4em;
+	margin-top: .7em;
+	margin-bottom: .6em;
+	margin-left: -.075em;
+	white-space: nowrap;
+}
+
+h1:hover {
+	font-weight: 100;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+h1.passive:hover {
+	text-decoration: none;
+	cursor: default;
+}
+
+h2 {
+	font-size: 1em;
+	font-weight: bold;
+	margin-top: 1em;
+	margin-bottom: 1.5em;
+	transform: translate3d(0,0,0); 
+	text-transform: uppercase;
+	letter-spacing: .05em;
+}
+
+
+div { 	margin: auto; }
+
+a:link, a:visited { text-decoration: none; }
+a:hover { text-decoration: underline;}
+
+#l .active span, #r .active span { font-weight: bold; } 
+
+#l li.active:hover, #r li.active:hover {text-decoration: none !important; }
+
+ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+li { 	margin: 0; padding: 0; }
+
+#l ul, #r ul { 	user-select: none; width: 80%; }
+
+#l, #r { 
+	position: fixed; 
+	top: 1.5em;
+	max-height: 100%;
+	bottom: 2vw;
+}
+
+#l li span:hover, #r li span:hover { text-decoration: underline;}
+#l p img {height: 1em; }
+#l li span, #r li span { cursor: pointer; }
+
+#l li, #r li {
+  transition-duration: .4s, .4s, .4s;
+  transition-property: font-size, opacity, line-height;
+}
+
+
+/* layout */
+
+#l {width: 20vw; margin: 0 3vw;}
+#m {width: 45vw; padding-top: 5.825em; padding-left: 4vw; }
+#r {width: 20vw; padding-top: 4.325em; right: 3vw; }
+
+
+/* areas */
+
+#l { 	transform: translate3d(0,0,0); }
+#l h2 { margin-top: 1.5em; margin-bottom: 0.75em;}
+#l li {padding: 0; margin: .2em 0; line-height: 1.2em; font-weight: 100; }
+#l p {transform: translate3d(0,0,0); }
+
+/* papers & projects */
+#m img { width: 44.4vw; height: 11.1vw; margin-bottom: 0em; }
+
+#m li.project img {
+	border-width: .08em;
+	border-style: solid;
+}
+
+#m li { margin-bottom: 1.5em; clear: both; 	overflow: hidden;  }
+
+#m ul { padding-bottom: 2em; padding-top: 0.1em; }
+#m h2 a.passive:hover { text-decoration: none; cursor: default;}
+
+#m.init li { transition-duration: 0s; }
+#m li {
+	max-height: 30vw;
+  transition-duration: .3s, .3s, .3s;
+  transition-property: opacity, max-height, margin-bottom;
+}
+
+#m li em { font-style: normal; }
+
+#m li.hidden {
+	opacity: 0; max-height: 0; margin-bottom: 0;
+}
+
+#l p a, #m li a { font-weight: normal; }
+
+#m li span { cursor: help;}
+
+/* authors */
+#r ul { margin-top: .5em; float: right;}
+#r li { padding: 0; margin: .2em 0; line-height: 1.2em; font-weight: 100; }
+#r h2 { margin-bottom: 1.1em; text-align: right; direction: rtl; hyphens: manual; }
+
+#r { text-align: right; }
+
+#canvas {
+	top: 0; left: 0;
+	width: 100vw;
+	height: 100vh;
+	position: fixed;
+	transition: opacity .3s ease-in;
+}
+
+#canvas {	z-index: -1; }
+#l, #m, #r {	z-index: 1; }
+
+
+#switch {
+	position: fixed;
+	top: .75em;
+	right: .75em;
+	width: 1.75em;
+	height: 1.75em;
+	background-image: var(--moon);
+  background-size: cover;
+	opacity: .33;
+	cursor: pointer;
+}
+
+#email em {
+	white-space: nowrap;
+	word-spacing: -.3em;
+	font-style: normal;
+}
+
+#imprint {
+	font-size: .75em;
+	line-height: 1.25em;
+}
+
+</style>
+</head>
+<body>
+<div>
+
+<div title="Switch between light and dark modes" id="switch" class=""></div>
+
+<div id="l">
+<h1><span><?php echo $website_title ?></span></h1>
+<p><?php echo $about_section ?></p>
+
+<p id="imprint">
+<?php echo $contact_details ?>
+</p>
+
+<h2>Keywords</h2>
+<ul>
+<?php
+foreach ($topics as $topic) {
+	$slug = preg_replace("/[^A-Za-z0-9]/", '', $topic);
+	echo "<li id='$slug'><span>".htmlspecialchars($topic)."</span></li>\n";
+}
+?>	
+</ul>
+
+</div>
+
+<div id="r">
+<h2>Collab&shy;orators</h2>
+<ul>
+<?php
+foreach ($people as $name) {
+	$slug = preg_replace("/[^A-Za-z0-9]/", '', $name);
+	echo "<li id='$slug'><span>$name</span></li>\n";
+}
+?>	
+</ul>
+</div>
+
+<div id="m" class="init">
+<h2><a href="#papers">Publications</a> &amp; <a href="#projects">Projects</a></h2>
+<ul>
+
+<?php
+
+foreach ($items as $item) {
+	
+	$class_slug = "";
+	if ($item["type"]=="project") $class_slug = "project";
+	
+	if (is_array($item["topics"])) foreach ($item["topics"] as $topic) {
+		$class_slug = $class_slug." ".preg_replace("/[^A-Za-z0-9]/", '', $topic);
+	}
+	
+	if (is_array($item["people"])) foreach ($item["people"] as $name) {
+		$class_slug = $class_slug." ".preg_replace("/[^A-Za-z0-9]/", '', $name);
+	}
+	
+	echo "<li class='$class_slug'>";
+	echo "<a href='{$item["link"]}'";
+	if ($item["hover"]!="") echo " title='{$item["hover"]}' ";
+	echo	">";
+		
+	if ($item["type"]=="project") echo "<img alt='{$item["title"]}' src='{$app_path}banners/{$item["img"]}'>";
+
+	echo "{$item["title"]}</a> {$item["info"]}</li>\n";
+}
+
+?>
+	
+</ul>
+
+</div>
+
+<canvas id="canvas"></canvas>
+
+
+<script>
+
+// polyfill
+if (window.NodeList && !NodeList.prototype.forEach) {
+    NodeList.prototype.forEach = function (callback, thisArg) {
+        thisArg = thisArg || window;
+        for (var i = 0; i < this.length; i++) {
+            callback.call(thisArg, this[i], i, this);
+        }
+    };
+}
+
+
+var website_title = "<?php echo $website_title ?>";
+var view = 0; // 1: keywords, 2: projects vs papers, 3: people
+var vin = -1; // index of keyword or person
+var hash = '';
+var l = []; var m = []; var r = [];
+var lm = []; // left → middle, i.e., from areas to items
+var rm = []; // right → middle, i.e., from authors to items
+var ml = []; // middle → left, i.e., from items to areas
+var mr = []; // middle → right, i.e., from items to authors
+var m_iv = []; // items in view
+var m_bb = []; // items bounding boxes
+var vw = document.documentElement.clientWidth/100;
+var vh = document.documentElement.clientHeight/100;
+var can = document.getElementById('canvas');
+var can_bb = null;
+var ctx = false;
+var hover = null;
+var redraw_timeouts = [];
+function x(s) { return document.querySelector(s); }
+function X(s) { return document.querySelectorAll(s); }
+var strokeColor = '50,50,50';
+var darkmodeToggle = -1;	
+var gap = 200;
+
+
+
+
+function items() {
+
+	// set hidden classes
+	
+	// no filter
+	if (view==0) X("#m li.hidden").forEach(function(e){e.classList.remove("hidden")});
+	else {
+		X("#m li").forEach(function(e){e.classList.add("hidden")});
+		
+		// keyword
+		if (view==1) {
+			for (var i = 0; i < lm[vin].length; i++) lm[vin][i].classList.remove("hidden");
+		}
+		// projects or papers
+		else if (view==2) {
+			X("#m li").forEach(function(e){	
+				if (e.classList.contains("project") && vin==1) e.classList.remove("hidden");			
+				else if (!e.classList.contains("project") && vin==0 ) e.classList.remove("hidden");
+			})
+		}
+		// people
+		else if (view==3) {	
+			for (var i = 0; i < rm[vin].length; i++) rm[vin][i].classList.remove("hidden");
+		}
+	}
+}
+
+
+	
+function links() {
+	if (typeof window.matchMedia !== "undefined" &&
+		window.matchMedia("(prefers-color-scheme: dark)").matches) {
+			if (darkmodeToggle==1) strokeColor = '100,100,100';
+			else strokeColor = '200,200,200';
+	}
+	else {
+		if (darkmodeToggle==1) strokeColor = '200,200,200';
+		else strokeColor = '100,100,100';		
+	}
+	
+	// clear canvas
+	var w = document.documentElement.clientWidth;
+	var h = document.documentElement.clientHeight;
+	ctx.clearRect(0, 0, w, h+gap);
+	
+	// get current position of canvas element
+	can_bb = can.getBoundingClientRect();
+	
+	// areas
+	for (var li = 0; li < lm.length; li++) {
+		var le = l[li];
+		var aid = le.id;
+		if (aid==hash) continue;		
+		for (var i = 0; i < lm[li].length; i++) {
+			var me = lm[li][i];
+			var mi = getIndex(me);
+			if (me.classList.contains("hidden") || !m_iv[mi]) continue;			
+			if (hover==le || hover==me) link_lm(li, mi, .7);
+			else link_lm(li, mi, .1);			
+		}
+	}
+	
+	// authors
+	for (var ri = 0; ri < rm.length; ri++) {
+		var re = r[ri];
+		var pname = re.textContent;
+		if (re.id==hash) continue;
+		for (var i = 0; i < rm[ri].length; i++) {
+			var me = rm[ri][i];
+			var mi = getIndex(me);
+			if (me.classList.contains("hidden") || !m_iv[mi]) continue;			
+			if (hover==re || hover==me) link_mr(mi, ri, .7);
+			else link_mr(mi, ri, .1);
+		}
+	}	
+}
+
+function link_lm(a, b, o) {
+	var bb1 = x("#l li:nth-of-type("+(a+1)+") span").getBoundingClientRect();
+	var bb2 = m_bb[b];
+	
+	if (x("#m li:nth-of-type("+(b+1)+")").classList.contains("project")) var h = 5.5*vw;
+	else var h = bb2.height/2;
+	
+	var dx = -can_bb.left;
+	var dy = -can_bb.top;				
+	
+	var start = { x: dx+bb1.left+bb1.width+vw/4, 							y: dy+bb1.top+.55*bb1.height  };
+	var cp1 =   { x: dx+bb1.left+bb1.width+(20*vw-bb1.width), 	y: dy+bb1.top+.55*bb1.height  };
+	var cp2 =   { x: dx+bb2.left-vw*4,  				 								y: dy+bb2.top+h };
+	var end =   { x: dx+bb2.left-vw/2,													y: dy+bb2.top+h };
+
+	ctx.lineWidth = .075*vw;
+	ctx.strokeStyle = 'rgba('+strokeColor+','+o+')';
+	ctx.beginPath();
+	ctx.moveTo(start.x, start.y);
+	ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
+	ctx.stroke();
+}
+
+function link_mr(a, b, o) {
+	var bb1 = m_bb[a];
+	var bb2 = x("#r li:nth-of-type("+(b+1)+") span").getBoundingClientRect();
+	
+	if (x("#m li:nth-of-type("+(a+1)+")").classList.contains("project")) var h = 5.5*vw;
+	else var h = bb1.height/2;
+	
+	var dx = -can_bb.left;
+	var dy = -can_bb.top;	
+	
+	var start = { x: dx+bb1.left+bb1.width, 		y: dy+bb1.top+h  };
+	var cp1 =   { x: dx+bb1.left+bb1.width+vw*4,  		y: dy+bb1.top+h  };
+	var cp2 =   { x: dx+bb2.left-(20*vw-bb2.width),  y: dy+bb2.top+.55*bb2.height };
+	var end =   { x: dx+bb2.left-vw/4,								y: dy+bb2.top+.55*bb2.height };
+
+	ctx.lineWidth = .075*vw;
+	ctx.strokeStyle = 'rgba('+strokeColor+','+o+')';
+	ctx.beginPath();
+	ctx.moveTo(start.x, start.y);
+	ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
+	ctx.stroke();
+}
+
+function items_bb() {	
+	// get which items are shown and get their position
+	X("#m li").forEach(function(e) {		
+		if (e.classList.contains('hidden')) return;
+		var i = getIndex(e);
+		m_bb[i] = e.getBoundingClientRect();
+		if (m_bb[i].bottom >= vw && m_bb[i].top <= window.innerHeight-vw) m_iv[i]=true;
+		else m_iv[i]=false;
+	});
+}
+
+function areas() {
+
+	var areas = [];
+	for (var li = 0; li < lm.length; li++) {
+		areas[li] = 0;
+		for (var i = 0; i < lm[li].length; i++) {
+			var m_li = lm[li][i];
+			if (!m_li.classList.contains('hidden') && m_iv[getIndex(m_li)]) areas[li]++;			
+		}
+	}
+	
+	var sum = 0;
+	for (var i = 0; i < areas.length; i++) sum=sum+areas[i];
+	var shown = 0;
+	for (var i = 0; i < areas.length; i++) if (areas[i]>0) shown++;
+
+	for (var i = 0; i < areas.length; i++) {
+		var el = x("#l li:nth-of-type("+(i+1)+")");
+		if (areas[i]==0) var scale = 0;
+		else var scale = interval(areas[i], 0, 4, .33, 1.33, true, true);
+		if (areas[i]<1) el.style.opacity = areas[i];
+		else el.style.opacity = areas[i];
+		el.style["font-size"] = scale+"em";
+	}
+}
+
+function getIndex(el) {
+    var i = 0;
+    while ( (el = el.previousElementSibling) ) i++;    
+    return i;
+}
+
+function authors() {
+
+	var people = [];
+	for (var ri = 0; ri < rm.length; ri++) {
+		people[ri] = 0;
+		for (var i = 0; i < rm[ri].length; i++) {
+			var m_li = rm[ri][i];
+			if (!m_li.classList.contains('hidden') && m_iv[getIndex(m_li)]) people[ri]++;			
+		}
+	}
+	
+	var sum = 0;
+	for (var i = 0; i < people.length; i++) sum=sum+people[i];
+	
+	var shown = 0;
+	for (var i = 0; i < people.length; i++) if (people[i]>0) shown++;
+
+	for (var i = 0; i < people.length; i++) {
+		var el = x("#r li:nth-of-type("+(i+1)+")");
+		if (people[i]==0) var scale = 0;
+		else var scale = interval(people[i], 0, 3, .33, 1.33, true, true);
+		if (people[i]<1) el.style.opacity = people[i];
+		else el.style.opacity = people[i];
+		el.style["font-size"] = scale+"em";
+	}
+	
+}
+
+function canvas() {
+  var dpr = window.devicePixelRatio || 1;
+  var rect = can.getBoundingClientRect();	
+	var w = document.documentElement.clientWidth;
+	var h = document.documentElement.clientHeight;	
+	vw = w/100;
+	vh = h/100;
+  can.width = w * dpr;
+  can.height = (h+gap)* dpr;
+  ctx.scale(dpr, dpr);
+	can.style.height = (h+gap)+"px";
+	can.style.width = w+"px";
+	ctx.clearRect(0, 0, w, h+gap);
+}
+
+function check_view() {
+	view = 0;
+	vin = -1;
+
+	X(".active").forEach(function(e) {e.classList.remove("active")});
+	X(".passive").forEach(function(e) {e.classList.remove("passive")});
+	
+	if (hash=="papers")
+	{
+		view = 2;	
+		vin = 0;
+		
+		var pub = x("#m h2 a:nth-of-type(1)");
+		pub.classList.add("active");
+		pub.setAttribute("href", "#");
+		
+		var pro = x("#m h2 a:nth-of-type(2)");
+		pro.classList.remove("active");
+		pro.setAttribute("href", "#projects");
+		
+		document.title = website_title+" · Publications";	
+	}
+	else if (hash=="projects") {
+		view = 2;	
+		vin = 1;
+		
+		var pub = x("#m h2 a:nth-of-type(1)");
+		pub.classList.remove("active");
+		pub.setAttribute("href", "#papers");
+		
+		var pro = x("#m h2 a:nth-of-type(2)");
+		pro.classList.add("active");
+		pro.setAttribute("href", "#");
+
+		document.title = website_title+" · Projects";
+	}	
+	else {
+		x("#m h2 a:nth-of-type(1)").setAttribute("href", "#papers")
+		x("#m h2 a:nth-of-type(2)").setAttribute("href", "#projects");
+		
+		X("#l li").forEach(function(e){
+			var id = e.id;
+			if (hash==id) {
+				view=1;
+				vin=getIndex(e);
+				e.classList.add("active");
+				document.title = website_title+" · "+e.textContent;
+			}			
+		});
+		
+		X("#r li").forEach(function(e){
+			var id = e.id;
+			if (hash==id) {
+				view=3;
+				vin=getIndex(e);
+				e.classList.add("active");
+				document.title = website_title+" · "+e.textContent;
+			}			
+		});
+	}
+	
+	if (view==0) {
+		x("h1").classList.add('passive');
+		document.title = website_title;
+		hash="";
+		history.pushState("", document.title, window.location.pathname + window.location.search);
+	}
+	else x("h1").classList.remove('passive');
+}
+
+
+function redraw() {
+
+	items_bb();	
+	areas();
+	authors();	
+	links();
+	
+	for (var i = 0; i < redraw_timeouts.length; i++) clearTimeout(redraw_timeouts[i]);
+	
+	for (var i = 0; i < 5; i++) {
+		redraw_timeouts[i] = setTimeout(function() {
+			items_bb();
+			links();
+		}, i*100);
+	}
+	
+}
+
+function redraw_staged() {
+	check_view();		
+	items(); 
+	
+	for (var i = 0; i < redraw_timeouts.length; i++) clearTimeout(redraw_timeouts[i]);
+	
+	redraw_timeouts[0] = setTimeout(function() {
+		// canvas();
+		// items_bb();
+		areas();
+		authors();
+		// links();
+	}, 500);
+
+	for (var i = 1; i < 10; i++) {
+		redraw_timeouts[i] = setTimeout(function() {
+			items_bb();
+			links();
+		}, i*100);
+	}
+	
+}
+
+function interval(x, xmin, xmax, ymin, ymax, bound, log) {
+	// make sure return value is withiin ymin and ymax
+	if (typeof bound === "undefined") bound = false;
+	if (typeof log === "undefined") log = false;
+
+	if (xmin == xmax) return ymax;
+
+	var y, m, n;
+
+	if (log) {
+		var logxmax = Math.log(xmax+1);
+		var logxmin = Math.log(xmin+1);
+		m           = ( ymax / logxmax - ymin) / (1 - logxmin );
+		n           = ymin - m*logxmin;
+		y           = m * Math.log(x+1) + n;
+	}
+	else {
+		m           = (ymax - ymin) / (xmax - xmin);
+		n           = -xmin * m + ymin;
+		y           = x * m + n;
+	}
+
+	if (bound) {
+		if (ymin<ymax) {
+			y          = Math.min(ymax, y);
+			y          = Math.max(ymin, y);
+		}
+		else {
+			y          = Math.max(ymax, y);
+			y          = Math.min(ymin, y);
+		}
+	}
+
+	return y;
+}
+
+window.onresize = function(){
+	vw = document.documentElement.clientWidth/100;
+	vh = document.documentElement.clientHeight/100;	
+	x("body").style.fontSize = 5+.5*vw+.5*vh+"px";	
+	canvas();
+	redraw();
+}
+
+setTimeout(function(){
+	var ticking = false;
+	window.onscroll = function(e) {
+		
+		if (view==0 && window.scrollY==0) x("h1").classList.add('passive');		
+		else x("h1").classList.remove('passive');
+		
+	  if (!ticking) {
+	    window.requestAnimationFrame(function() {
+	      redraw();
+	      ticking = false;
+	    });
+	    ticking = true;
+	  }
+	};
+}, 1000)
+
+document.onreadystatechange = function () {
+	
+	x("body").style.fontSize = 5+.5*vw+.5*vh+"px";
+	
+  if (document.readyState === 'interactive') {
+
+		// associations between items, authors and areas
+		X("#m li").forEach(function(e){m.push(e); ml[getIndex(e)] = []; mr[getIndex(e)] = []; });
+		X("#l li").forEach(function(e){ l.push(e); lm[getIndex(e)] = []; });
+		X("#r li").forEach(function(e){ r.push(e); rm[getIndex(e)] = []; });
+		
+		X("#m li").forEach(function(me){
+			var mi = getIndex(me);
+			var html = me.innerHTML;
+			X("#l li").forEach(function(le){
+				var li = getIndex(le);
+				var aid = le.id;
+				if (me.classList.contains(aid)) {
+					lm[li].push(me);
+					ml[mi].push(le);
+				}
+			});
+			X("#r li").forEach(function(re){
+				var ri = getIndex(re);
+				var pid = re.id;
+				if (me.classList.contains(pid)) {
+					rm[ri].push(me);
+					mr[mi].push(re);
+				}
+			});
+			
+		});
+	
+		// canvas
+		if (can.getContext) ctx = can.getContext('2d');
+		else ctx = false;
+		canvas();
+	
+		hash = window.location.hash.substring(1);
+
+		redraw_staged();
+		setTimeout(function(){ redraw(); }, 1000);
+		
+		x("#m.init").classList.remove("init");
+	
+		setTimeout(function(){
+			
+			X("li span").forEach(function(el) {
+				el.onmouseenter = function(e) {
+					hover = e.target.parentNode;
+					links();	
+				}
+			});
+			
+			X("#m li").forEach(function(el) {
+				el.onmouseenter = function(e) {
+					hover = e.target;
+					links();	
+				}
+			});
+			
+			X("#r li span, #l li span, #m li").forEach(function(el) {
+				el.onmouseleave = function(e) {
+				hover = null;
+				links();
+				}
+			});
+			
+		}, 1000);
+	
+  }
+}
+
+
+function hashchange(e) {
+	hash = window.location.hash.substring(1);	
+	redraw_staged();
+}
+
+window.onhashchange = hashchange;
+
+X("#l li span, #r li span").forEach(function(el) {
+	el.onclick = function(e){		
+		var id = e.target.parentNode.id;
+		if (hash == id) {
+			history.pushState("", document.title, window.location.pathname + window.location.search);
+			hash="";
+			redraw_staged();
+		}
+		else window.location.hash = id;
+		e.preventDefault();
+	}
+});
+
+x("h1").onclick = function(e){
+	history.pushState("", document.title, window.location.pathname + window.location.search);
+	hash="";
+	redraw_staged();
+	setTimeout(function(){
+		window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });		
+	}, 500);
+	e.preventDefault();	
+};
+
+document.onkeyup = function(e) {
+   if (e.key === "Escape") {
+		 window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+		 history.pushState("", document.title, window.location.pathname + window.location.search);
+		 hash="";
+		 redraw_staged();
+	 }
+}
+
+document.getElementById("switch").onclick = function(e){
+	
+	darkmodeToggle = darkmodeToggle *-1;
+
+	if (darkmodeToggle==1) x("body").classList.add("toggle");
+	else x("body").classList.remove("toggle");
+	
+	links();
+
+	e.preventDefault();
+}
+
+
+</script>
+</div>
+</body>
+</html>
