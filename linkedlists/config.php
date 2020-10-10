@@ -1,22 +1,20 @@
 <?php
 
-$website_title = "Marian Dörk";
-$website_url = "https://mariandoerk.de/"; // with trailing slash
+$website_title = "Global Voices";
+$website_url = "https://mariandoerk.de/linkedlists/globalvoices/"; // with trailing slash
 
-$website_description = "I am a research professor for information visualization at the Institute for Urban Futures of Fachhochschule Potsdam, where I co-direct the UCLAB. This page contains a selection of things I had the privilege to work on with students, colleagues and advisors.";
+$website_description = "An international community of writers, translators, academics, and human rights activists.";
 
-$about_section = 'I am a research professor for information visualization at the <a href="https://www.fh-potsdam.de/forschen/urbane-zukunft/">Institute for Urban Futures</a> of <a title="University of Applied Sciences Potsdam" href="https://www.fh-potsdam.de/">Fachhochschule Potsdam</a>, where I&nbsp;co-direct the <a href="http://uclab.fh-potsdam.de/">UCLAB</a>. This page contains a selection of things I had the privilege to work on with students, colleagues and advisors.';
+$about_section = 'An <a href="https://globalvoices.org/">international community</a> of writers, translators, academics, and human rights activists.';
 
-$contact_details ='Kiepenheuerallee&nbsp;5, 14469&nbsp;Potsdam<br>
-<a id="email" href="mailto:marian.doerk@fh-potsdam.de">marian.doerk@<em> fh-potsdam.de</em></a><br>
-<a href="tel:00493315802511">+49 331 580-2511</a><br>
-<a href="https://twitter.com/nrchtct">@nrchtct</a>';
+$contact_details ='The articles are made available under a <a href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license.';
 
 // should match column names in data.csv
-$facet_left = "keywords";
-$facet_right = "collaborators";
+$facet_left = "regions";
+$facet_right = "topics";
+$facet_middle = "authors"; // clickable if matched
 
 // should be used in type column
-$types = array("Publications", "Projects");
+$types = array("Articles");
 
 ?>
