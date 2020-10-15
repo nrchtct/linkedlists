@@ -495,7 +495,7 @@ var search_box = x("#ll_search");
 function items() {
 
 	// set hidden classes
-
+	
 	// no filter
 	if (view==0) X("#m li.hidden").forEach(function(e){e.classList.remove("hidden")});
 	else {
@@ -740,21 +740,21 @@ function check_view() {
 	}
 	// active search
 	else if (hash.startsWith("q=")) {
-		view = 4;		
+		view = 4;
 		document.title = website_title+" · "+decodeURIComponent(hash.substring(2));
 		search_box.value = decodeURIComponent(hash.substring(2));
 	}
 	// active facet
 	else {
 		search_box.value="";
-		
+				
 		if (types.length>1) for (var i = 0; i < types.length; i++) {
 			x("#m h2 a:nth-of-type("+(i+1)+")").setAttribute("href", "#"+types[i])
 		}
 
 		X("#l li").forEach(function(e){
 			var id = e.id;
-			if (hash==id) {
+			if (id!="" && hash==id) {
 				view=1;
 				vin=getIndex(e);
 				e.classList.add("active");
@@ -764,7 +764,7 @@ function check_view() {
 		
 		X("#r li").forEach(function(e){
 			var id = e.id;
-			if (hash==id) {
+			if (id!="" && hash==id) {
 				view=3;
 				vin=getIndex(e);
 				e.classList.add("active");
