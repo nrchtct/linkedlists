@@ -255,6 +255,7 @@ li { 	margin: 0; padding: 0; }
 	background-color: xred;
 }
 
+h1 {width: 22.5vw; white-space: normal;}
 #l {width: 20vw; margin: 0 3vw;}
 #m {width: 45vw; margin-top: 1.5em; padding-left: 4vw; }
 #r {width: 20vw; padding-top: 4.325em; right: 3vw; }
@@ -409,7 +410,8 @@ foreach ($right_items as $name) {
 	else {
 		foreach ($types as $i=>$t) {
 			if (count($types)==$i+1) echo " &amp; ";
-			echo "<a href='#$t'>$t</a> ";
+			else if ($i>0) echo ", ";
+			echo "<a href='#$t'>$t</a>";
 		}		
 	}
 	
@@ -491,6 +493,12 @@ var gap = 200;
 var types = ['<?php echo implode("','", $types) ?>'];
 var search_box = x("#ll_search");
 
+// remove ems from titles
+X("#m li span").forEach(function(e){
+	var title = e.getAttribute("title");
+	title = title.replace(/<em>/g, "").replace(/<\/em>/g, "");
+	e.setAttribute("title", title);
+ });
 
 function items() {
 
