@@ -139,13 +139,14 @@ body {
 	-webkit-text-size-adjust: none;
 	margin: 0; padding: 0;
 	font-family: hkgrotesk, sans-serif;
-/*	font-size: 1.25vw;*/
-	font-size: 10px;
+	font-size: 12px;
 	font-weight: 100;
 	line-height: 1.3em;
 	margin: auto;
 	overflow-y: scroll;
 	min-height: 100vh;	
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
 }
 
 ::selection {
@@ -156,9 +157,9 @@ h1 {
 	font-size: 2em;	
 	font-weight: 100;
 	line-height: 1.4em;
-	margin-top: .7em;
-	margin-bottom: .6em;
-	margin-left: -.075em;
+	margin-top: 0.25em;
+	margin-bottom: .5em;
+    margin-left: -.075em;
 	white-space: nowrap;
 }
 
@@ -176,7 +177,7 @@ h1.passive:hover {
 h2 {
 	font-size: 1em;
 	font-weight: bold;
-	margin-top: 1em;
+	margin-top: 0em;
 	margin-bottom: 1.5em;
 	transform: translate3d(0,0,0); 
 	text-transform: uppercase;
@@ -222,35 +223,16 @@ li { 	margin: 0; padding: 0; }
 
 /* layout */
 
-#l, #m, #r {
-	background-color: xred;
-}
-
-h1 {width: 22.5vw; white-space: normal;}
 #l {width: 20vw; margin: 0 3vw;}
-#m {width: 45vw; margin-top: 1.5em; padding-left: 4vw; }
+#m {width: 45vw; padding-top: 5.825em; padding-left: 4vw; }
 #r {width: 20vw; padding-top: 4.325em; right: 3vw; }
-
-/*  search  */
-
-#m h2 { float: left; } 
-
-#ll_search {
-	padding: 0;
-	margin: 2em 0 2.5em 0;
-	border: 0px;
-	width: 15vw;
-	display: block;
-	border: 1px solid #999;
-}
-
 
 
 /* areas */
 
 #l { 	transform: translate3d(0,0,0); }
 #l h2 { margin-top: 1.5em; margin-bottom: 0.75em;}
-#l li {padding: 0; margin: .2em 0; line-height: 1.2em; font-weight: 100; }
+#l li {padding: 0; margin: .15em 0; line-height: 1.2em; font-weight: 100; }
 #l p {transform: translate3d(0,0,0); }
 
 /* types */
@@ -280,13 +262,14 @@ h1 {width: 22.5vw; white-space: normal;}
 #l p a, #m li a { font-weight: normal; }
 
 #m li { cursor: default;}
+#m li a { margin-right: .5em;}
 #m li span { cursor: help;}
 #m li em { font-style: normal; cursor: pointer; }
 #m li em:hover {text-decoration: underline;}
 
 /* authors */
 #r ul { margin-top: .5em; float: right;}
-#r li { padding: 0; margin: .2em 0; line-height: 1.2em; font-weight: 100; }
+#r li { padding: 0; margin: .15em 0; line-height: 1.2em; font-weight: 100; }
 #r h2 { margin-bottom: 1.1em; text-align: right; direction: rtl; hyphens: manual; }
 
 #r { text-align: right; }
@@ -360,8 +343,7 @@ foreach ($right_items as $name) {
 
 	
 <h2>
-<input type="search" placeholder="Search" id="ll_search" name="q">
-	<?php
+<?php
 	
 	if (count($types)==1) echo $types[0];
 	else {
@@ -425,7 +407,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
 
 var website_title = "<?php echo $website_title ?>";
-var view = 0; // 1: left, 2: types, 3: right, 4: search
+var view = 0; // 1: left, 2: types, 3: right
 var vin = -1; // index of keyword or person
 var hash = '';
 var l = []; var m = []; var r = [];
@@ -447,7 +429,6 @@ function X(s) { return document.querySelectorAll(s); }
 var strokeColor = '50,50,50';
 var gap = 200;
 var types = ['<?php echo implode("','", $types) ?>'];
-var search_box = x("#ll_search");
 
 // remove ems from titles
 X("#m li span").forEach(function(e){
@@ -610,7 +591,7 @@ function areas() {
 	for (var i = 0; i < areas.length; i++) {
 		var el = x("#l li:nth-of-type("+(i+1)+")");
 		if (areas[i]==0) var scale = 0;
-		else var scale = interval(areas[i], 0, 4, .33, 1.33, true, true);
+		else var scale = interval(areas[i], 0, 4, .25, 1.25, true, true);
 		if (areas[i]<1) el.style.opacity = areas[i];
 		else el.style.opacity = areas[i];
 		el.style["font-size"] = scale+"em";
@@ -643,7 +624,7 @@ function authors() {
 	for (var i = 0; i < people.length; i++) {
 		var el = x("#r li:nth-of-type("+(i+1)+")");
 		if (people[i]==0) var scale = 0;
-		else var scale = interval(people[i], 0, 3, .33, 1.33, true, true);
+		else var scale = interval(people[i], 0, 3, .25, 1.25, true, true);
 		if (people[i]<1) el.style.opacity = people[i];
 		else el.style.opacity = people[i];
 		el.style["font-size"] = scale+"em";
@@ -694,18 +675,9 @@ function check_view() {
 		}
 
 		document.title = website_title+" · "+types[vin];
-		search_box.value="";
-	}
-	// active search
-	else if (hash.startsWith("q=")) {
-		view = 4;
-		document.title = website_title+" · "+decodeURIComponent(hash.substring(2));
-		search_box.value = decodeURIComponent(hash.substring(2));
 	}
 	// active facet
 	else {
-		search_box.value="";
-				
 		if (types.length>1) for (var i = 0; i < types.length; i++) {
 			x("#m h2 a:nth-of-type("+(i+1)+")").setAttribute("href", "#"+types[i])
 		}
@@ -768,8 +740,6 @@ function redraw_staged() {
 	for (var i = 0; i < redraw_timeouts.length; i++) clearTimeout(redraw_timeouts[i]);
 	
 	redraw_timeouts[0] = setTimeout(function() {
-		// canvas();
-		// items_bb();
 		areas();
 		authors();
 		// links();
@@ -823,7 +793,7 @@ function interval(x, xmin, xmax, ymin, ymax, bound, log) {
 window.onresize = function(){
 	vw = document.documentElement.clientWidth/100;
 	vh = document.documentElement.clientHeight/100;	
-	x("body").style.fontSize = 5+.5*vw+.5*vh+"px";	
+	x("body").style.fontSize = 6+.7*vw+.3*vh+"px";
 	canvas();
 	redraw();
 }
@@ -847,7 +817,7 @@ setTimeout(function(){
 
 document.onreadystatechange = function () {
 	
-	x("body").style.fontSize = 5+.5*vw+.5*vh+"px";
+	x("body").style.fontSize = 6+.7*vw+.3*vh+"px";
 	
   if (document.readyState === 'interactive') {
 
@@ -939,34 +909,6 @@ X("#l li span, #r li span").forEach(function(el) {
 	}
 });
 
-X("#m li em").forEach(function(el) {
-	el.onclick = function(e){
-
-		var text = e.target.textContent;
-		search_box.value=text;
-		searchchange();
-		e.preventDefault();
-	}
-});
-
-function searchchange(){
-	var text = search_box.value;
-	
-	if (text=="") {
-		window.location.hash="";
-		redraw_staged();
-	}
-	else window.location.hash = "q="+text;
-	
-};
-
-search_box.onchange = searchchange;
-
-// cancel search
-search_box.oninput = function(e){
-	if (e.target.value=="") window.location.hash="";
-}
-
 x("h1").onclick = function(e){
 
 	setTimeout(function(){
@@ -982,7 +924,6 @@ x("h1").onclick = function(e){
 document.onkeyup = function(e) {
    if (e.key === "Escape") {
 		 window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-		 search_box.blur();
 		 hash="";
 		 redraw_staged();
 	 }
