@@ -95,9 +95,6 @@ asort($right_items);
 	--dark_border_hover: hsl(0,0%,50%);
 	--dark_link: hsl(209,100%,40%);
 	--dark_filter: hsl(330,100%,40%);
-	--sun:url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8' standalone='no'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg xmlns:xl='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' xmlns:dc='http://purl.org/dc/elements/1.1/' version='1.1' viewBox='0 0 100 100' width='100' height='100'%3E%3Cdefs/%3E%3Cg id='sun' stroke='none' stroke-opacity='1' stroke-dasharray='none' fill-opacity='1' fill='none'%3E%3Ctitle%3Esun%3C/title%3E%3Cg id='sun: Layer 1'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cg id='Graphic_6'%3E%3Ccircle cx='49.6063' cy='49.6063' r='15.5905760024116' fill='white'/%3E%3C/g%3E%3Cg id='Line_7'%3E%3Cline x1='49.6063' y1='8.838385' x2='49.6063' y2='28.680905' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3Cg id='Line_8'%3E%3Cline x1='49.6063' y1='70.7445' x2='49.6063' y2='90.58702' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3Cg id='Line_12'%3E%3Cline x1='90.54144' y1='49.6063' x2='70.69892' y2='49.6063' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3Cg id='Line_11'%3E%3Cline x1='28.504923' y1='49.6063' x2='8.662403' y2='49.6063' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3Cg id='Line_16'%3E%3Cline x1='78.635545' y1='20.577053' x2='64.604765' y2='34.607833' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3Cg id='Line_15'%3E%3Cline x1='34.634665' y1='64.57793' x2='20.603885' y2='78.60871' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3Cg id='Line_20'%3E%3Cline x1='20.586964' y1='20.46408' x2='34.617744' y2='34.49486' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3Cg id='Line_19'%3E%3Cline x1='64.58784' y1='64.46496' x2='78.61862' y2='78.49574' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A");
-	--moon: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8' standalone='no'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg xmlns:xl='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' xmlns:dc='http://purl.org/dc/elements/1.1/' version='1.1' viewBox='0 0 100 100' width='100' height='100'%3E%3Cdefs/%3E%3Cg id='moon' stroke='none' stroke-opacity='1' stroke-dasharray='none' fill-opacity='1' fill='none'%3E%3Ctitle%3Emoon%3C/title%3E%3Cg id='moon: Layer 1'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cg id='Graphic_4'%3E%3Cpath d='M 14.173229 67.11095 C 15.648538 69.51313 17.426565 71.781945 19.50731 73.86268 C 33.80932 88.16476 56.99744 88.16476 71.299445 73.86268 C 85.60153 59.56067 85.60153 36.372554 71.299445 22.070546 C 67.82103 18.59211 63.81698 15.95967 59.542976 14.173228 C 68.20826 28.282496 66.43023 46.992363 54.208894 59.213636 C 43.385304 70.03728 27.472387 72.66972 14.173228 67.11095 Z' fill='black'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A");
-
 }
 
 
@@ -110,22 +107,8 @@ a:link, a:visited { color: var(--light_link); }
 #m h2 a { color: var(--light_text);}
 ::selection {   background-color: var(--light_link); }	
 #m li img:not(.dark) { opacity: 1; }	
-div#switch { background-image: var(--moon); }
 #m li img {border-color: var(--light_border);}
 #m li:hover img {border-color: var(--light_border_hover);}
-
-body.toggle { color: var(--dark_text); background-color: var(--dark_background); }
-body.toggle h2 { color: var(--dark_text); }
-body.toggle a:link, body.toggle a:visited { color: var(--dark_link); }
-body.toggle #l .active span, body.toggle #r .active span, body.toggle #m .active { color: var(--dark_filter); }
-body.toggle #m li { color: var(--dark_text); }
-body.toggle #m h2 a { color: var(--dark_text);}
-body.toggle ::selection { background-color: var(--dark_link); }		
-body.toggle #m li img:not(.dark) { opacity: .66; transition: opacity .5s; }
-body.toggle #m li:hover img:not(.dark) { opacity: 1; }
-body.toggle div#switch { background-image: var(--sun) }						
-body.toggle #m li img {border-color: var(--dark_border);}
-body.toggle #m li:hover img {border-color: var(--dark_border_hover);}
 
 
 /* dark mode */
@@ -139,21 +122,9 @@ body.toggle #m li:hover img {border-color: var(--dark_border_hover);}
 	::selection { background-color: var(--dark_link); }
 	#m li img:not(.dark) { opacity: .66; transition: opacity .5s; }
 	#m li:hover img:not(.dark) { opacity: 1; }	
-	div#switch { background-image: var(--sun); }	
 	#m li img {border-color: var(--dark_border);}	
 	#m li:hover img {border-color: var(--dark_border_hover);}
 		
-	body.toggle { color: var(--light_text); background-color: var(--light_background); }
-	body.toggle h2 { color: var(--light_text); }
-	body.toggle a:link, body.toggle a:visited { color: var(--light_link); }
-	body.toggle #l .active span, body.toggle #r .active span , body.toggle #m .active { color: var(--light_filter); }
-	body.toggle #m li { color: var(--light_text); }
-	body.toggle #m h2 a { color: var(--light_text);}
-	body.toggle ::selection { background-color: var(--light_link); }		
-	body.toggle #m li img:not(.dark) { opacity: 1; }	
-	body.toggle div#switch { background-image: var(--moon); }	
-	body.toggle #m li img {border-color: var(--light_border); }	
-	body.toggle #m li:hover img {border-color: var(--light_border_hover);}	
 }
 
 
@@ -333,18 +304,6 @@ h1 {width: 22.5vw; white-space: normal;}
 #l, #m, #r {	z-index: 1; }
 
 
-#switch {
-	position: fixed;
-	top: .75em;
-	right: .75em;
-	width: 1.75em;
-	height: 1.75em;
-	background-image: var(--moon);
-  background-size: cover;
-	opacity: .33;
-	cursor: pointer;
-}
-
 #email em {
 	white-space: nowrap;
 	word-spacing: -.3em;
@@ -360,8 +319,6 @@ h1 {width: 22.5vw; white-space: normal;}
 </head>
 <body>
 <div>
-
-<div title="Switch between light and dark modes" id="switch" class=""></div>
 
 <div id="l">
 <h1><span><?php echo $website_title ?></span></h1>
@@ -488,7 +445,6 @@ var redraw_timeouts = [];
 function x(s) { return document.querySelector(s); }
 function X(s) { return document.querySelectorAll(s); }
 var strokeColor = '50,50,50';
-var darkmodeToggle = -1;	
 var gap = 200;
 var types = ['<?php echo implode("','", $types) ?>'];
 var search_box = x("#ll_search");
@@ -540,14 +496,8 @@ function items() {
 	
 function links() {
 	if (typeof window.matchMedia !== "undefined" &&
-		window.matchMedia("(prefers-color-scheme: dark)").matches) {
-			if (darkmodeToggle==1) strokeColor = '100,100,100';
-			else strokeColor = '200,200,200';
-	}
-	else {
-		if (darkmodeToggle==1) strokeColor = '200,200,200';
-		else strokeColor = '100,100,100';		
-	}
+		window.matchMedia("(prefers-color-scheme: dark)").matches) strokeColor = '200,200,200';
+	else strokeColor = '100,100,100';		
 	
 	// clear canvas
 	var w = document.documentElement.clientWidth;
@@ -1038,17 +988,6 @@ document.onkeyup = function(e) {
 	 }
 }
 
-document.getElementById("switch").onclick = function(e){
-	
-	darkmodeToggle = darkmodeToggle *-1;
-
-	if (darkmodeToggle==1) x("body").classList.add("toggle");
-	else x("body").classList.remove("toggle");
-	
-	links();
-
-	e.preventDefault();
-}
 
 
 </script>
