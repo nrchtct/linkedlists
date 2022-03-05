@@ -379,7 +379,6 @@ foreach ($items as $item) {
 	if ($item["img"]!="") echo "<img alt='{$item["title"]}' src='{$app_path}banners/{$item["img"]}'>";
 
 	$regexp = "/(".implode($middle_items, "|").")/i";
-  $item["info"] = preg_replace($regexp, "<em>$1</em>", $item["info"]); 
 
 	echo "{$item["title"]}</a> {$item["info"]}</li>\n";
 }
